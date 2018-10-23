@@ -1,9 +1,8 @@
 import request from '@/utils/request'
 
-export function listOrders(query) {
+export function listOrders(status) {
   return request({
-    url: '/orders',
-    method: 'get',
-    params: query
+    url: '/orders/' + status,
+    method: 'get'
   })
 }

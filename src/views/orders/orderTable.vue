@@ -41,7 +41,7 @@
           <ul>
             <li v-for="p in scope.row.products" :key="p.id">
               <span class="link-type" @click="handleUpdate(scope.row)">{{ p.name }} </span>
-              ({{ p.amount }} × {{ p.quantity }})
+              ({{ p.amount }} (※{{ p.cost }}) × {{ p.quantity }})
             </li>
           </ul>
         </template>
@@ -248,9 +248,6 @@ export default {
         type: undefined,
         sort: '+id'
       },
-      listQuery2: {
-        status: 2
-      },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
@@ -302,7 +299,7 @@ export default {
     },
     getList2() {
       this.listLoading = true
-      listOrders(this.listQuery2).then(response => {
+      listOrders('unshipped').then(response => {
         this.list = response.data
         this.total = response.data.length
         console.log('--------------------------')
