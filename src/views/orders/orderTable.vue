@@ -33,10 +33,81 @@
       </el-table-column>
       <el-table-column :label="$t('table.date')" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.created_at | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.title')" min-width="150px">
+      <el-table-column :label="$t('table.importance')" min-width="150px">
+        <template slot-scope="scope">
+          <ul>
+            <li v-for="p in scope.row.products" :key="p.id">
+              <span class="link-type" @click="handleUpdate(scope.row)">{{ p.name }} </span>
+              ({{ p.amount }} × {{ p.quantity }})
+            </li>
+          </ul>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.importance')" min-width="150px">
+        <template slot-scope="scope">
+          <span>
+            <!-- {{ scope.row.shipping_address.country }} -->
+            {{ scope.row.shipping_address.postal_code }}
+            {{ scope.row.shipping_address.prefecture }}
+            {{ scope.row.shipping_address.line1 }}
+            {{ scope.row.shipping_address.line2 }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.shipping_fee }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.payment_fee }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.payment_method }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.total_product_num }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.total_product_quantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.total_product_amount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.total_product_amount_tax_included }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.total_amount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.author')" width="80px">
+        <template slot-scope="scope">
+          <span>
+            {{ scope.row.delivery_agent }}
+            {{ scope.row.delivery_date }}
+            <!-- {{ scope.row.delivery_date ? (scope.row.delivery_date | parseTime('{y}-{m}-{d}')) : null }} -->
+            {{ scope.row.delivery_time_zone }}
+          </span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column :label="$t('table.title')" min-width="150px">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>
           <el-tag>{{ scope.row.type | typeFilter }}</el-tag>
@@ -62,7 +133,7 @@
           <span v-if="scope.row.pageviews" class="link-type" @click="handleFetchPv(scope.row.pageviews)">{{ scope.row.pageviews }}</span>
           <span v-else>0</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column :label="$t('table.status')" class-name="status-col" width="100">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
@@ -70,7 +141,6 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
           <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">{{ $t('table.publish') }}
           </el-button>
           <el-button v-if="scope.row.status!='draft'" size="mini" @click="handleModifyStatus(scope.row,'draft')">{{ $t('table.draft') }}
@@ -81,7 +151,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <!-- <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
@@ -122,7 +192,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogPvVisible = false">{{ $t('table.confirm') }}</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
   </div>
 </template>
@@ -212,7 +282,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // this.getList()
     this.getList2()
   },
   methods: {
@@ -221,6 +291,8 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
+        console.log('==========================')
+        console.log(response.data)
 
         // Just to simulate the time of the request
         setTimeout(() => {
@@ -231,9 +303,10 @@ export default {
     getList2() {
       this.listLoading = true
       listOrders(this.listQuery2).then(response => {
-        // this.list = response.data.items
-        // this.total = response.data.total
+        this.list = response.data
+        this.total = response.data.length
         console.log('--------------------------')
+        console.log(response.data.length)
         console.log(response.data)
 
         // Just to simulate the time of the request
