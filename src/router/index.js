@@ -111,6 +111,19 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
+    path: '/orders',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/orders/orderTable'),
+        name: 'Orders',
+        meta: { title: 'orders', icon: 'table', noCache: true }
+      }
+    ]
+  },
+
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/index',
