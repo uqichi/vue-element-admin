@@ -129,6 +129,7 @@
 
 <script>
 import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { listOrders } from '@/api/order'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -177,6 +178,9 @@ export default {
         type: undefined,
         sort: '+id'
       },
+      listQuery2: {
+        status: 2
+      },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
@@ -209,6 +213,7 @@ export default {
   },
   created() {
     this.getList()
+    this.getList2()
   },
   methods: {
     getList() {
@@ -216,6 +221,20 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
+
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
+    },
+    getList2() {
+      this.listLoading = true
+      listOrders(this.listQuery2).then(response => {
+        // this.list = response.data.items
+        // this.total = response.data.total
+        console.log('--------------------------')
+        console.log(response.data)
 
         // Just to simulate the time of the request
         setTimeout(() => {
