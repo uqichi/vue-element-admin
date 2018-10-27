@@ -288,8 +288,6 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
-        console.log('==========================')
-        console.log(response.data)
 
         // Just to simulate the time of the request
         setTimeout(() => {
@@ -299,12 +297,9 @@ export default {
     },
     getList2() {
       this.listLoading = true
-      listOrders('unshipped').then(response => {
+      listOrders('unpaid').then(response => {
         this.list = response.data
         this.total = response.data.length
-        console.log('--------------------------')
-        console.log(response.data.length)
-        console.log(response.data)
 
         // Just to simulate the time of the request
         setTimeout(() => {
